@@ -1,25 +1,35 @@
 import argparse
-from typing import List
-import numpy.random
 import itertools
+import numpy.random
 import subprocess
+from pathlib import Path
+from typing import List
 
 
 class TaskRunnerCli:
-    def __init__(self):
+    def __init__(self, path: Path):
         program_description = 'Run several tasks in a block design, assuming all tasks are Python scripts'
         parser = argparse.ArgumentParser(description=program_description,
                                          add_help=False,
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-        parser.add_argument('--task-path', metavar='Path to tasks', required=True, nargs='*',
+        parser.add_argument('--task-path',
+                            metavar='Path to tasks',
+                            required=False,
+                            nargs='*',
                             help='Space separated list of the paths to each task.'
                                  'Example: --task-path /Users/user/task1 /Users/user/task2',
+                            default=[str(path / 'value_affirmation' / 'value_affirmation.py'),
+                                     str(path / 'down_regulation_of_craving' / 'ROC.py'),
+                                     str(path / 'high_level_construal' / 'construal_level_task.py')],
                             dest='task_paths')
 
-        parser.add_argument('--num', metavar='Number of tasks per block', required=False,
+        parser.add_argument('--num',
+                            metavar='Number of tasks per block',
+                            required=False,
                             help='Number of tasks per block'
                                  'Example: --num 2',
+                            default=2,
                             type=int,
                             dest='num')
 
@@ -34,7 +44,7 @@ class TaskRunnerCli:
 
 if __name__ == '__main__':
     # Go get the tasks
-    cli = TaskRunnerCli()
+    cli = TaskRunnerCli(path=Path.home())
 
     # Permute them
     block_list = list(itertools.permutations(cli.get_task_paths(), r=cli.get_number()))
