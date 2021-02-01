@@ -10,7 +10,6 @@ class TaskRunnerCli:
     def __init__(self, path: Path):
         program_description = 'Run several tasks in a block design, assuming all tasks are Python scripts'
         parser = argparse.ArgumentParser(description=program_description,
-                                         add_help=False,
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
         parser.add_argument('--task-path',
