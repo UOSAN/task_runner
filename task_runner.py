@@ -2,6 +2,7 @@ import argparse
 import itertools
 import numpy.random
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -60,6 +61,14 @@ if __name__ == '__main__':
     # Permute them
     block_list = list(itertools.permutations(cli.get_task_paths(), r=cli.get_number()))
     numpy.random.default_rng().shuffle(block_list)
+
+    # Write out expected task run order
+    output_path = Path.cwd() / f'{cli.get_participant_id()}_{int(datetime.now().timestamp())}_task_run_order.txt'
+    with open(output_path, mode='w') as f:
+        f.write('# Planned task run order:\n')
+        for block in block_list:
+            for task in block:
+                f.write(Path(task).name + '\n')
 
     # Run the tasks.
     for block in block_list:
