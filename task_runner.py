@@ -32,6 +32,15 @@ class TaskRunnerCli:
                             type=int,
                             dest='num')
 
+        parser.add_argument('--id',
+                            metavar='Participant ID',
+                            required=True,
+                            help='The participant identifier.'
+                                 'Example: --id RS999',
+                            type=str,
+                            dest='partid'
+                            )
+
         self._args = parser.parse_args()
 
     def get_task_paths(self) -> List[str]:
@@ -39,6 +48,9 @@ class TaskRunnerCli:
 
     def get_number(self) -> int:
         return self._args.num
+
+    def get_participant_id(self) -> str:
+        return self._args.partid
 
 
 if __name__ == '__main__':
