@@ -2,6 +2,7 @@ import argparse
 import itertools
 import numpy.random
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import List
@@ -79,5 +80,10 @@ if __name__ == '__main__':
         # Wait between blocks?
         for task in block:
             p = subprocess.run(['python3', task], capture_output=True, text=True)
+            if 'can\'t open file' in p.stderr:
+                print(f'Unable to find task: {Path(task).name}.\n'
+                      '    - Make sure the path to the task is correct.\n'
+                      '    - Make sure the task has been compiled to Python.')
+                sys.exit()
             print(f'Output: {p.stdout}')
             print(f'Error : {p.stderr}')
