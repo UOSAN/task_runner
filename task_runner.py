@@ -54,6 +54,10 @@ class TaskRunnerCli:
         return self._args.partid
 
 
+def get_date_string(date_format: str = "%Y_%b_%d_%H%M"):
+    return datetime.now().strftime(date_format)
+
+
 if __name__ == '__main__':
     # Go get the tasks
     cli = TaskRunnerCli(path=Path.home())
@@ -63,7 +67,7 @@ if __name__ == '__main__':
     numpy.random.default_rng().shuffle(block_list)
 
     # Write out expected task run order
-    output_path = Path.cwd() / f'{cli.get_participant_id()}_{int(datetime.now().timestamp())}_task_run_order.txt'
+    output_path = Path.cwd() / f'{cli.get_participant_id()}_{get_date_string()}_task_run_order.txt'
     with open(output_path, mode='w') as f:
         f.write('# Planned task run order:\n')
         for block in block_list:
@@ -73,7 +77,6 @@ if __name__ == '__main__':
     # Run the tasks.
     for block in block_list:
         # Wait between blocks?
-        # Log task run order?
         for task in block:
             p = subprocess.run(['python3', task], capture_output=True, text=True)
             print(f'Output: {p.stdout}')
