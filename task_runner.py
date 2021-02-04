@@ -75,6 +75,6 @@ if __name__ == '__main__':
         # Wait between blocks?
         # Log task run order?
         for task in block:
-            p = subprocess.run(['python3', task])
+            p = subprocess.run(['python3', task], capture_output=True, text=True)
             print(f'Output: {p.stdout}')
             print(f'Error : {p.stderr}')
