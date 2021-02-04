@@ -34,5 +34,11 @@ BA
 ```
 Optional. Default is `--num 2`.
 
+```
+--id [participant identifier]
+```
+Participant identifier, for logging the task run order. Must be in `RS` followed
+by 3 digits. Example: `--id RS999`.
+
 #### Prerequisites
 Install psychopy as a Python module, by running `pip3 install psychopy`.
