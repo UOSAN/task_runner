@@ -19,9 +19,9 @@ class TaskRunnerCli:
                             nargs='*',
                             help='Space separated list of the paths to each task.'
                                  'Example: --task-path /Users/user/task1 /Users/user/task2',
-                            default=[str(path / 'value_affirmation' / 'value_affirmation.py'),
-                                     str(path / 'down_regulation_of_craving' / 'ROC.py'),
-                                     str(path / 'high_level_construal' / 'construal_level_task.py')],
+                            default=[str(path / 'value_affirmation.py'),
+                                     str(path / 'ROC.py'),
+                                     str(path / 'construal_level_task.py')],
                             dest='task_paths')
 
         parser.add_argument('--num',
