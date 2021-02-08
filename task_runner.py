@@ -18,7 +18,7 @@ class TaskRunnerCli:
                             metavar='Path to tasks',
                             required=False,
                             nargs='*',
-                            help='Space separated list of the paths to each task.'
+                            help='Space separated list of the paths to each task. '
                                  'Example: --task-path /Users/user/task1 /Users/user/task2',
                             default=[str(path / 'value_affirmation' / 'value_affirmation.py'),
                                      str(path / 'down_regulation_of_craving' / 'ROC.py'),
@@ -28,7 +28,7 @@ class TaskRunnerCli:
         parser.add_argument('--num',
                             metavar='Number of tasks per block',
                             required=False,
-                            help='Number of tasks per block'
+                            help='Number of tasks per block. '
                                  'Example: --num 2',
                             default=2,
                             type=int,
@@ -37,7 +37,7 @@ class TaskRunnerCli:
         parser.add_argument('--id',
                             metavar='Participant ID',
                             required=True,
-                            help='The participant identifier.'
+                            help='The participant identifier. '
                                  'Example: --id RS999',
                             type=str,
                             dest='partid'
