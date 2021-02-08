@@ -20,9 +20,9 @@ class TaskRunnerCli:
                             nargs='*',
                             help='Space separated list of the paths to each task.'
                                  'Example: --task-path /Users/user/task1 /Users/user/task2',
-                            default=[str(path / 'value_affirmation.py'),
-                                     str(path / 'ROC.py'),
-                                     str(path / 'construal_level_task.py')],
+                            default=[str(path / 'value_affirmation' / 'value_affirmation.py'),
+                                     str(path / 'down_regulation_of_craving' / 'ROC.py'),
+                                     str(path / 'high_level_construal' / 'construal_level_task.py')],
                             dest='task_paths')
 
         parser.add_argument('--num',
@@ -61,7 +61,8 @@ def get_date_string(date_format: str = "%Y_%b_%d_%H%M"):
 
 if __name__ == '__main__':
     # Go get the tasks
-    cli = TaskRunnerCli(path=Path.home())
+    default_path = Path.home() / 'Desktop'
+    cli = TaskRunnerCli(path=default_path)
 
     # Permute them
     block_list = list(itertools.permutations(cli.get_task_paths(), r=cli.get_number()))
@@ -81,7 +82,12 @@ if __name__ == '__main__':
         for task in block:
             p = subprocess.run(['python3', task], capture_output=True, text=True)
             if 'can\'t open file' in p.stderr:
+                if Path(task).parent == default_path:
+                    msg = f'    - Looked in default path: {default_path}.\n'
+                else:
+                    msg = f'    - Looked in task path: {Path(task).parent}.\n'
                 print(f'Unable to find task: {Path(task).name}.\n'
+                      f'{msg}'
                       '    - Make sure the path to the task is correct.\n'
                       '    - Make sure the task has been compiled to Python.')
                 sys.exit()
