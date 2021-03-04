@@ -1,44 +1,28 @@
 # task runner
 Task runner runs the complete set of
 [partial permutations](https://en.wikipedia.org/wiki/Permutation#k-permutations_of_n)
-of a given set of tasks. The set is run in a random order.
+for the 3 tasks in the smoking study. The task paths are hard-coded, and have
+to be in `Desktop/ASH/high_level_construal`, `Desktop/ASH/regulation_of_craving`, and
+`Desktop/ASH/value_affirmation`. It will print out and log to a file the planned order
+the tasks will run in.
 
 ## How to use
 ```
-python3 task_runner.py --task-path /Users/user/task1.py /Users/user/task2.py /Users/user/task3.py --num 2 --id RS999
+python3 task_runner.py --id ASH999 --session 2
 ```
 
 ### Arguments
 ```
---task-path [task1] [task2] ...
+--session [number]
 ```
-A space separated list of paths to the tasks. Tasks are assumed to be
-implemented using PsychoPy, and have been compiled to Python script form.
-Optional. Default assumes three tasks in the home directory with names `ROC.py`,
-`value_affirmation.py` and `construal_level_task.py`,
-
-```
---num [number]
-```
-How many tasks to run per block. Blocks are created from the partial
-permutations of the task list. For example, with 3 tasks `A`, `B`, and `C` and `--num 2`,
-6 blocks will be created and executed in a random order. A possible task
-execution order is:
-```
-AB
-CB
-BC
-CA
-AC
-BA
-```
-Optional. Default is `--num 2`.
+The session number, should be 1 or 2. You can use `--session 0` to run a practice
+session that will run all three tasks with a couple of trials in each task.
 
 ```
 --id [participant identifier]
 ```
-Participant identifier, for logging the task run order. Must be in `RS` followed
-by 3 digits. Example: `--id RS999`.
+Participant identifier, for logging the task run order. Must be in `ASH` followed
+by 3 digits. Example: `--id ASH999`.
 
 #### Prerequisites
 Install psychopy as a Python module, by running `pip3 install psychopy`.
