@@ -25,6 +25,16 @@ class TaskRunnerCli:
                             type=int,
                             dest='session')
 
+        parser.add_argument('--run',
+                            metavar='Run number',
+                            required=False,
+                            help='Restart at run number n, from the planned run order. '
+                                 'Must be 1, 2, 3, 4, 5 or 6. '
+                                 'Example: --run 2',
+                            default=0,
+                            type=int,
+                            dest='restart_run')
+
         self._args = parser.parse_args()
 
     def get_participant_id(self) -> str:
@@ -32,3 +42,9 @@ class TaskRunnerCli:
 
     def get_session(self) -> int:
         return self._args.session
+
+    def restart(self) -> bool:
+        return self._args.restart_run > 0
+
+    def get_run(self) -> int:
+        return self._args.restart_run

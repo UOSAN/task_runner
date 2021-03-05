@@ -1,15 +1,12 @@
+import random
 import subprocess
-from datetime import datetime
+import csv
 from pathlib import Path
-
-import numpy.random
 
 from task_runner_cli import TaskRunnerCli
 
 
-def get_date_string(date_format: str = "%Y_%b_%d_%H%M"):
-    return datetime.now().strftime(date_format)
-
+FIELDNAMES = ['run', 'task_a', 'task_b']
 
 if __name__ == '__main__':
     root_path = Path.home() / 'Desktop' / 'ASH'
@@ -25,11 +22,10 @@ if __name__ == '__main__':
                   4: ('values affirmation', 'construal level'),
                   5: ('ROC', 'construal level'),
                   6: ('values affirmation', 'ROC')}
-    # Shuffle
-    run_order = list(range(1, 7))
-    numpy.random.default_rng().shuffle(run_order)
 
     cli = TaskRunnerCli()
+    task_run_order_path = root_path / f'{cli.get_participant_id()}_session_{cli.get_session()}_task_run_order.csv'
+    run_order = []
 
     # If it is a practice session, just run all three tasks.
     is_practice_session = (cli.get_session() == 0)
@@ -45,27 +41,47 @@ if __name__ == '__main__':
             print(f'Output: {p.stdout}')
             print(f'Error : {p.stderr}')
     else:
-        # In-scanner session: write out planned order and run the tasks.
-        output_path = Path.cwd() / f'{cli.get_participant_id()}_{get_date_string()}_session_{cli.get_session()}_task_run_order.txt'
-        with open(output_path, mode='w') as f:
-            s = f'# Planned order for subject {cli.get_participant_id()} during session {cli.get_session()}:\n'
-            f.write(s)
-            print(s, end='')
-            for run in run_order:
-                s = f'Run {run}, '
-                f.write(s)
-                print(s, end='')
-                for task_name in block_list[run]:
-                    s = f'{task_name}, '
-                    f.write(s)
-                    print(s, end='')
-                f.write('\n')
-                print()
-
-        # Run the tasks.
         runs_per_task = {'construal level': 0,
                          'ROC': 0,
                          'values affirmation': 0}
+        if not cli.restart():
+            # Get a random run order
+            run_order = list(range(1, 7))
+            random.shuffle(run_order)
+
+            # In-scanner session: write out planned order and run the tasks.
+            with open(task_run_order_path, mode='w') as f:
+                writer = csv.DictWriter(f, FIELDNAMES)
+                writer.writeheader()
+                for run in run_order:
+                    writer.writerow({FIELDNAMES[0]: run, FIELDNAMES[1]: block_list[run][0], FIELDNAMES[2]: block_list[run][1]})
+
+            print(f'# Planned order for subject {cli.get_participant_id()} during session {cli.get_session()}:')
+            for run in run_order:
+                print(f'Run {run}, {block_list[run][0]}, {block_list[run][1]}')
+        else:
+            # If restarting, read the planned order
+            # For example: run_order = [6, 5, 4, 1, 2, 3]
+            with open(task_run_order_path, mode='r') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    run_order.append(int(row[FIELDNAMES[0]]))
+
+            # Get the tasks that were already run,
+            # and use that information to populate which run of each task has been completed.
+            # For example: if we want to restart on run 1, then already_run becomes [6, 5, 4]
+            already_run = run_order[:run_order.index(cli.get_run())]
+            for r in already_run:
+                t1 = block_list[r][0]
+                t2 = block_list[r][1]
+                runs_per_task[t1] += 1
+                runs_per_task[t2] += 1
+
+            # Then only run the remaining tasks.
+            # For example, run_order is just [1, 2, 3], so we just run the unfinished tasks.
+            run_order = run_order[run_order.index(cli.get_run()):]
+
+        # Run the tasks.
         for run in run_order:
             # Run the first task
             task_name = block_list[run][0]
