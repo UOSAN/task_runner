@@ -24,7 +24,7 @@ if __name__ == '__main__':
                   6: ('values affirmation', 'ROC')}
 
     cli = TaskRunnerCli()
-    task_run_order_path = root_path / f'{cli.get_participant_id()}_session_{cli.get_session()}_task_run_order.csv'
+    task_run_order_path = Path.cwd() / 'run_order' / f'{cli.get_participant_id()}_session_{cli.get_session()}_task_run_order.csv'
     run_order = []
 
     # If it is a practice session, just run all three tasks.
@@ -44,29 +44,15 @@ if __name__ == '__main__':
         runs_per_task = {'construal level': 0,
                          'ROC': 0,
                          'values affirmation': 0}
-        if not cli.restart():
-            # Get a random run order
-            run_order = list(range(1, 7))
-            random.shuffle(run_order)
 
-            # In-scanner session: write out planned order and run the tasks.
-            with open(task_run_order_path, mode='w') as f:
-                writer = csv.DictWriter(f, FIELDNAMES)
-                writer.writeheader()
-                for run in run_order:
-                    writer.writerow({FIELDNAMES[0]: run, FIELDNAMES[1]: block_list[run][0], FIELDNAMES[2]: block_list[run][1]})
+        # Read the planned order
+        # For example: run_order = [6, 5, 4, 1, 2, 3]
+        with open(task_run_order_path, mode='r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                run_order.append(int(row[FIELDNAMES[0]]))
 
-            print(f'# Planned order for subject {cli.get_participant_id()} during session {cli.get_session()}:')
-            for run in run_order:
-                print(f'Run {run}, {block_list[run][0]}, {block_list[run][1]}')
-        else:
-            # If restarting, read the planned order
-            # For example: run_order = [6, 5, 4, 1, 2, 3]
-            with open(task_run_order_path, mode='r') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    run_order.append(int(row[FIELDNAMES[0]]))
-
+        if cli.restart():
             # Get the tasks that were already run,
             # and use that information to populate which run of each task has been completed.
             # For example: if we want to restart on run 1, then already_run becomes [6, 5, 4]

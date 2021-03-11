@@ -1,0 +1,7 @@
+run,task_a,task_b
+5,ROC,construal level
+2,construal level,values affirmation
+1,construal level,ROC
+3,ROC,values affirmation
+4,values affirmation,construal level
+6,values affirmation,ROC
