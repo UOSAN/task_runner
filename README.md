@@ -28,28 +28,20 @@ by 3 digits. Example: `--id ASH999`.
 --run [run number]
 ```
 Run number to start. Optional. Should only be used to restart an interrupted scan session.
+Each run corresponds to a predefined pair of tasks that the participant will perform.
 Example: `--run 3`.
 
 ### Output
-The application will write out to the terminal window the planned task run order. For example:
-```
-# Planned order for subject ASH999 during session 2:
-Run 6, values affirmation, ROC
-Run 4, values affirmation, construal level
-Run 2, construal level, values affirmation
-Run 3, ROC, values affirmation
-Run 1, construal level, ROC
-Run 5, ROC, construal level
-```
-It will also write this information to a CSV file named `[participant identifier]_session_[session number]_task_run_order.csv`,
-e.g. `ASH999_session_2_task_run_order.csv`.  Then it will start running tasks.
+The run order is pre-generated for each participant and is in a CSV file named `[participant identifier]_session_[session number]_task_run_order.csv`,
+e.g. `ASH999_session_2_task_run_order.csv`. After starting task_runner, it will immediately start running tasks.
 If you want to restart from run 2 (because you were forced to end in the middle of
 that run), then add a `--run [run number]` argument to the command line, e.g.
 ```
 python3 task_runner.py --id ASH999 --session 2 --run 2
 ```
-It will read the planned run order from the CSV file written initially, then will execute
-starting from run 2. In our example, runs 2, 3, 1, 5 will be run.
+It will read the planned run order from the CSV file, then will execute
+starting from run 2. For example, if the run order is 6, 4, 2, 3, 1, 5,
+then runs 2, 3, 1, 5 will be run.
 
 #### Prerequisites
 Install psychopy as a Python module, by running `pip3 install psychopy`.
