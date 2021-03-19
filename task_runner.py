@@ -76,7 +76,7 @@ if __name__ == '__main__':
                                 '--id', cli.get_participant_id(),
                                 '--session', str(cli.get_session()),
                                 '--run', str(runs_per_task[task_name]),
-                                '--is_first', str(True)],
+                                '--is_first'],
                                capture_output=True,
                                text=True)
             print(f'Output: {p.stdout}')
@@ -88,8 +88,7 @@ if __name__ == '__main__':
             p = subprocess.run(['python3', str(tasks[task_name]),
                                 '--id', cli.get_participant_id(),
                                 '--session', str(cli.get_session()),
-                                '--run', str(runs_per_task[task_name]),
-                                '--is_first', str(False)],
+                                '--run', str(runs_per_task[task_name])],
                                capture_output=True,
                                text=True)
             print(f'Output: {p.stdout}')
