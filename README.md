@@ -45,3 +45,12 @@ then runs 2, 3, 1, 5 will be run.
 
 #### Prerequisites
 Install psychopy as a Python module, by running `pip3 install psychopy`.
+
+To install psychopy as a Python module on a new computer, you will need
+to install some prerequisites. To do this, on macOS, I had to do the following:
+1. Install brew (https://brew.sh/)
+2. Use brew to install some dependencies: `brew install hdf5 c-blosc git`
+3. Install Python3
+4. Install PsychoPy as a Python module: `pip3 install psychopy`
+5. Remove a troublesome and optional dependency: `pip3 uninstall psychtoolbox`
+6. Complete!
