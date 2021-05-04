@@ -66,6 +66,14 @@ if __name__ == '__main__':
             # Then only run the remaining tasks.
             # For example, run_order is just [1, 2, 3], so we just run the unfinished tasks.
             run_order = run_order[run_order.index(cli.get_run()):]
+        else:
+            # Run the filler task to allow a fieldmap to be collected
+            filler_task = str(root_path / 'filler' / 'filler.py')
+            p = subprocess.run(['python3', filler_task],
+                               capture_output=True,
+                               text=True)
+            print(f'Output: {p.stdout}')
+            print(f'Error : {p.stderr}')
 
         # Run the tasks.
         for run in run_order:
